@@ -7,7 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 /// simulates the loading process to load in given seconds
 /// the hook takes an duration in sec and creates an interval which adds up to
 /// the given duration when it mutates the 100th time
-int useCount100In(int countDurationInSec) {
+int useLoadingPercentageIn(int countDurationInSec) {
   assert(countDurationInSec > 0 && countDurationInSec < 60);
   return use(_CounterTimer(countDurationInSec));
 }
@@ -25,7 +25,9 @@ class _CounterTimerState extends HookState<int, _CounterTimer> {
   /// The timer
   late Timer timer;
 
-  /// intervals when added up 100 times gives the given duration
+  /// intervals when added up 101 times gives the given duration
+  /// where 100 is the percentage and 101 to indicate it finished and load another
+  /// widget
   late int interval;
 
   /// mutating value
@@ -35,9 +37,9 @@ class _CounterTimerState extends HookState<int, _CounterTimer> {
   void initHook() {
     super.initHook();
     // calculating interval
-    interval = (hook.countForSec * 1000 ~/ 100);
+    interval = (hook.countForSec * 1000 ~/ 101);
     if (kDebugMode) {
-      print('set interval: ${interval}ms');
+      print('set interval: ${interval}sec');
     }
     // setting timer
     timer = Timer.periodic(Duration(milliseconds: interval), (t) {
@@ -48,7 +50,7 @@ class _CounterTimerState extends HookState<int, _CounterTimer> {
         }
       });
       // cancelling timer if it reached the goal
-      if (currentValue == 100) {
+      if (currentValue == 101) {
         timer.cancel();
       }
     });

@@ -18,10 +18,10 @@ class UploadDialog extends HookWidget {
     int mutationTime = 2;
 
     /// Mutation Hook
-    final loadingState = useCount100In(mutationTime);
+    final loadingState = useLoadingPercentageIn(mutationTime);
 
     /// Returning result after loading
-    return (loadingState != 100)
+    return (loadingState != 101)
         ? LoadingWidget(loadingState)
         : const ResultWidget();
   }
